@@ -1,4 +1,4 @@
-import Chat from "@/app/(authenticated)/builder/stage/ai-chat/Chat";
+import Chat from "@/app/(authenticated)/builder/stage/ai-chat/[chatId]/Chat";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {

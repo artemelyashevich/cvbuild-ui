@@ -11,7 +11,9 @@ export default function AuthenticatedLayout({children}: { children: React.ReactN
         <StompProvider token={token}>
             <Header />
             <NotificationListener/>
-            {children}
+            <div className={"flex justify-center w-full"}>
+                {children}
+            </div>
         </StompProvider>
 
     )
