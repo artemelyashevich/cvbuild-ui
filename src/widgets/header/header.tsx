@@ -2,12 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { IProfile } from "@/entities";
-import { User, Settings, LogOut, Sun, Moon, ArrowRight } from "lucide-react";
+import { User, Settings, LogOut, ArrowRight } from "lucide-react";
 import { ImageService } from "@/service/ImageService";
 import { AuthService } from "@/service/AuthService";
 
@@ -18,12 +16,6 @@ interface HeaderProps {
 export function LayoutHeader({ user }: Readonly<HeaderProps>) {
     const pathname = usePathname();
     const isLoggedIn = Boolean(user?.id);
-
-    const [isDark, setIsDark] = useState(false);
-
-    useEffect(() => {
-        document.documentElement.classList.toggle("dark", isDark);
-    }, [isDark]);
 
     const handleLogout = () => {
         AuthService.logout();
@@ -83,16 +75,6 @@ export function LayoutHeader({ user }: Readonly<HeaderProps>) {
 
                 <div className="flex items-center gap-4">
                     {user && renderUserMenu()}
-
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="p-2 rounded-full"
-                        onClick={() => setIsDark(!isDark)}
-                    >
-                        {isDark ? <Sun className="h-4 w-4 text-yellow-400" /> : <Moon className="h-4 w-4 text-gray-700" />}
-                    </Button>
-
                     {!pathname?.includes("/builder") && !pathname?.includes("/profile") && (
                         <Link
                             href="/builder/stage/welcome"

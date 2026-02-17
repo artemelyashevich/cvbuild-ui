@@ -123,7 +123,7 @@ export default function AiWelcomePage() {
                     e.preventDefault();
                     try {
                         await agree()
-                        toast.message("Your are confirmed agreement!")
+                        toast.success("Your are confirmed agreement!")
                     } catch (e) {
                         console.error(e as Error);
                         toast.error("Для этого действия необходоимо верифицировать почту")
@@ -147,7 +147,6 @@ export default function AiWelcomePage() {
                             Гарантированная читаемость алгоритмами.
                         </p>
                     </div>
-
 
                     {/* Action Button */}
                     <form

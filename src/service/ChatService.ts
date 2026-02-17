@@ -10,7 +10,7 @@ export class ChatService {
     }
 
     public static async findChat(chatId: string): Promise<IChat> {
-        const response = await axiosWithToken.get(chatId)
+        const response = await axiosWithToken.get(this.BASE_URL + "chat/" + chatId)
         return response.data
     }
 

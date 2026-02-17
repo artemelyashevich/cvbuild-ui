@@ -88,13 +88,21 @@ export default function VerifyEmailFlow({sendOtp, verifyOtp}: Readonly<VerifyEma
                         <Mail className="w-12 h-12 text-[#D6FF00] mb-4"/>
                         <h2 className="text-3xl font-black tracking-tight text-center">Введите Email</h2>
                         <form className="w-full space-y-6" onSubmit={handleEmailSubmit}>
-                            <Button
-                                type="submit"
-                                className="w-full h-14 rounded-[2rem] bg-[#D6FF00] text-black font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2"
-                                disabled={loading}
-                            >
-                                {loading ? <Loader2 className="w-5 h-5 animate-spin"/> : 'Отправить код'}
-                            </Button>
+                            {user?.emailVerified ?
+                                <div
+                                    className="w-full h-14 rounded-[2rem] bg-[#D6FF00] text-black font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2"
+                                >
+                                    Email already verified
+                                </div>
+                                : <Button
+                                    type="submit"
+                                    className="w-full h-14 rounded-[2rem] bg-[#D6FF00] text-black font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2"
+                                    disabled={loading}
+                                >
+                                    {loading ? <Loader2 className="w-5 h-5 animate-spin"/> : 'Отправить код'}
+                                </Button>
+                            }
+
                         </form>
                     </>
                 )}
