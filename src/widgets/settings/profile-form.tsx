@@ -12,7 +12,7 @@ import {useState} from "react";
 import useUploadFile from "@/features/hooks/use-upload-file";
 import {useRouter} from "next/navigation";
 
-export function ProfileForm({user}: { user: IProfile }) {
+export function ProfileForm({user}: Readonly<{ user: IProfile }>) {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const {mutate: updateProfile, isPending: isUpdatingProfile} = useUpdateProfile();

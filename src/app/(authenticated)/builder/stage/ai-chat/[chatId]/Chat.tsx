@@ -15,7 +15,9 @@ type Log = {
 export default function Chat() {
     const { chatId } = useParams();
     const [message, setMessage] = useState("");
-    const [logs, setLogs] = useState<Log[]>([]);
+    const [logs, setLogs] = useState<Log[]>([
+        {type: "ai", text: "Привет! Я помогу тебе создать резюме! Начнем?"},
+    ]);
     const [isThinking, setIsThinking] = useState(false);
     const [hasStarted, setHasStarted] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
@@ -96,54 +98,112 @@ export default function Chat() {
     }, [message, chatId, isThinking, isCompleted, hasStarted]);
 
     return (
-        <div className="px-4 font-sans flex justify-center">
-            <div className="w-full max-w-2xl h-[700px] flex flex-col overflow-hidden border rounded-2xl bg-white shadow-xl">
+        <div className="flex justify-center">
+            <div className="
+            w-full
+            h-[700px]
+            flex flex-col
+            overflow-hidden
+            border border-zinc-100
+            rounded-[2.5rem]
+            bg-white
+            shadow-sm
+        ">
 
-                {/* MESSAGES */}
-                <main className="flex-1 overflow-y-auto p-5 bg-slate-50 space-y-4">
+                {/* ===== Messages ===== */}
+                <main className="
+                flex-1
+                overflow-y-auto
+                p-8
+                bg-zinc-50/40
+                space-y-6
+            ">
                     {logs.map((log, i) => (
                         <Message key={i} log={log} />
                     ))}
 
                     {isThinking && !hasStarted && (
-                        <div className="flex justify-start items-center gap-2">
-                            <Loader2 className="animate-spin text-indigo-500" />
-                            <span className="text-sm text-indigo-500">AI печатает...</span>
+                        <div className="flex items-center gap-3 text-sm text-zinc-500">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            AI печатает...
                         </div>
                     )}
 
                     <div ref={logEndRef} />
                 </main>
 
-                {/* INPUT */}
-                <footer className="p-4 bg-white border-t">
+                {/* ===== Input ===== */}
+                <footer className="
+                p-6
+                bg-white
+                border-t border-zinc-100
+            ">
                     {!isCompleted ? (
-                        <div className="flex gap-2">
-              <textarea
-                  className="flex-1 border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none h-10 md:h-12"
-                  placeholder="Введите сообщение..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault();
-                          sendMessage();
-                      }
-                  }}
-                  disabled={isThinking}
-              />
+                        <div className="flex gap-4 items-end">
+
+                        <textarea
+                            className="
+                                flex-1
+                                bg-zinc-50
+                                border border-zinc-200
+                                rounded-[1.5rem]
+                                px-5 py-3
+                                text-sm
+                                resize-none
+                                focus:outline-none
+                                focus:border-black
+                                focus:bg-white
+                                transition-all
+                                min-h-[48px]
+                                max-h-[120px]
+                            "
+                            placeholder="Введите сообщение..."
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && !e.shiftKey) {
+                                    e.preventDefault();
+                                    sendMessage();
+                                }
+                            }}
+                            disabled={isThinking}
+                        />
+
                             <button
                                 onClick={sendMessage}
                                 disabled={isThinking}
-                                className="bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="
+                                h-12 w-12
+                                rounded-2xl
+                                bg-black
+                                text-white
+                                flex items-center justify-center
+                                transition-all
+                                hover:bg-[#D6FF00]
+                                hover:text-black
+                                disabled:opacity-40
+                            "
                             >
-                                <Send size={20} />
+                                <Send size={18} />
                             </button>
+
                         </div>
                     ) : (
                         <button
                             onClick={() => (window.location.href = "/form/stage/form")}
-                            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold transition-all"
+                            className="
+                            w-full
+                            h-14
+                            rounded-[2rem]
+                            bg-[#D6FF00]
+                            text-black
+                            font-black
+                            uppercase
+                            tracking-widest
+                            text-sm
+                            transition-all
+                            hover:brightness-105
+                        "
                         >
                             Сгенерировать резюме
                         </button>
@@ -155,33 +215,41 @@ export default function Chat() {
 }
 
 function Message({ log }: { log: Log }) {
-    const baseClasses =
-        "px-4 py-3 rounded-2xl text-sm break-words whitespace-pre-wrap overflow-hidden transition-all";
+    const base =
+        "px-5 py-4 rounded-[1.5rem] text-sm leading-relaxed break-words transition-all";
 
-    let styleClasses = "";
     if (log.type === "user") {
-        styleClasses = "bg-indigo-600 text-white rounded-br-none";
-    } else if (log.type === "sys") {
-        styleClasses = "bg-red-100 text-red-600 flex items-center gap-1";
-    } else {
-        styleClasses =
-            "bg-white border border-slate-200 text-slate-700 rounded-bl-none shadow-sm";
+        return (
+            <div className="flex justify-end">
+                <div className="max-w-[75%]">
+                    <div className={`${base} bg-black text-white rounded-br-sm`}>
+                        {log.text}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (log.type === "sys") {
+        return (
+            <div className="flex justify-start">
+                <div className="max-w-[75%]">
+                    <div className={`${base} bg-zinc-100 text-zinc-600 flex items-center gap-2`}>
+                        <AlertCircle className="w-4 h-4" />
+                        {log.text}
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div className={`flex ${log.type === "user" ? "justify-end" : "justify-start"}`}>
-            <div className="max-w-[85%] overflow-hidden">
-                <div className={`${baseClasses} ${styleClasses}`}>
-                    {log.type === "ai" ? (
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{log.text}</ReactMarkdown>
-                    ) : log.type === "sys" ? (
-                        <div className="flex items-center gap-2">
-                            <AlertCircle className="w-4 h-4" />
-                            <span>{log.text}</span>
-                        </div>
-                    ) : (
-                        log.text
-                    )}
+        <div className="flex justify-start">
+            <div className="max-w-[75%]">
+                <div className={`${base} bg-white border border-zinc-200 text-zinc-800 rounded-bl-sm shadow-sm`}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {log.text}
+                    </ReactMarkdown>
                 </div>
             </div>
         </div>

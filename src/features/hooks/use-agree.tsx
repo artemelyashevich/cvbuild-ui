@@ -2,8 +2,9 @@
 
 import {useMutation} from "@tanstack/react-query";
 import {ChatService} from "@/service/ChatService";
+import {SettingsService} from "@/service/SettingsService";
 
-export default function useCreateChat() {
+export default function useAgree() {
     const {
         data: chatContent,
         isPending,
@@ -11,8 +12,8 @@ export default function useCreateChat() {
         mutateAsync,
         error,
     } = useMutation({
-        mutationKey: ["user-chat"],
-        mutationFn: () => ChatService.createChat(),
+        mutationKey: ["user-agree"],
+        mutationFn: () => SettingsService.agree(),
     });
 
     return {

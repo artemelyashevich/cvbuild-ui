@@ -8,7 +8,7 @@ import {ImageService} from "@/service/ImageService";
 interface Props {
     initials: string;
     onFileSelect: (file: File | null) => void;
-    avatarUrl: string;
+    avatarUrl?: string;
 }
 
 export function AvatarUpload({ initials, onFileSelect, avatarUrl }: Readonly<Props>) {
