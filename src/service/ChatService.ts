@@ -1,12 +1,19 @@
 import {axiosWithToken} from "@/features";
-import {IChat} from "@/entities";
+import {IChat, PageRequestParams, PageResponse} from "@/entities";
 
 export class ChatService {
     private static readonly BASE_URL = '/ai-chat/';
 
-    public static async findAllChats(): Promise<IChat[]> {
-        const response = await axiosWithToken.get(this.BASE_URL)
-        return response.data;
+    public static async findByCurrent(params: PageRequestParams): Promise<PageResponse<IChat>> {
+        const {data} = await axiosWithToken.get<PageResponse<IChat>>('/ai-chat', {
+            params: {
+                page: params.page ?? 0,
+                size: params.size ?? 5,
+                sort: params.sort ?? 'createdAt',
+                direction: params.direction ?? 'desc',
+            },
+        });
+        return data;
     }
 
     public static async findChat(chatId: string): Promise<IChat> {

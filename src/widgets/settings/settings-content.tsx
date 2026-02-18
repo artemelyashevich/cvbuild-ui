@@ -12,7 +12,7 @@ interface Props {
 
 export default function SettingContent({ user }: Readonly<Props>) {
     return (
-        <div className="max-w-5xl mx-auto p-6 space-y-8">
+        <div className="w-full mx-auto p-6 space-y-8">
             <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
                 Настройки профиля
             </h2>
@@ -24,19 +24,19 @@ export default function SettingContent({ user }: Readonly<Props>) {
                 <TabsList className="grid grid-cols-3 rounded-xl bg-gray-50 p-1">
                     <TabsTrigger
                         value="profile"
-                        className="data-[state=active]:bg-yellow-200 data-[state=active]:shadow-md text-gray-700 font-medium"
+                        className="data-[state=active]:bg-[#D6FF00] data-[state=active]:shadow-md text-gray-700 font-medium"
                     >
                         Профиль
                     </TabsTrigger>
                     <TabsTrigger
                         value="security"
-                        className="data-[state=active]:bg-yellow-200 data-[state=active]:shadow-md text-gray-700 font-medium"
+                        className="data-[state=active]:bg-[#D6FF00] data-[state=active]:shadow-md text-gray-700 font-medium"
                     >
                         Безопасность
                     </TabsTrigger>
                     <TabsTrigger
                         value="notifications"
-                        className="data-[state=active]:bg-yellow-200 data-[state=active]:shadow-md text-gray-700 font-medium"
+                        className="data-[state=active]:bg-[#D6FF00] data-[state=active]:shadow-md text-gray-700 font-medium"
                     >
                         Уведомления
                     </TabsTrigger>

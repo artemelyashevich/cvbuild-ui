@@ -25,7 +25,7 @@ export function LayoutHeader({ user }: Readonly<HeaderProps>) {
     const renderUserMenu = () => (
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <Avatar className="h-10 w-10 border-2 border-yellow-400 cursor-pointer">
+                <Avatar className="h-10 w-10 border-2 border-[#D6FF00] cursor-pointer">
                     <AvatarImage src={ImageService.get(user?.avatarUrl)} />
                     <AvatarFallback>{`${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`}</AvatarFallback>
                 </Avatar>
