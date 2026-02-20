@@ -31,4 +31,8 @@ export class AuthService {
         Cookies.set("access_token", accessToken, {path: '/'});
         Cookies.set("refresh_token", refreshToken, {path: '/'});
     }
+
+    static async verify2fa(param: { email: string; code: string }) {
+        await axiosDefault.post(`${AuthService.API_URL}/2fa`, param);
+    }
 }
