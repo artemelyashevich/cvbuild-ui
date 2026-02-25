@@ -1,5 +1,5 @@
 import {axiosWithToken} from "@/features";
-import {IChat, PageRequestParams, PageResponse} from "@/entities";
+import {IChat, PageRequestParams, PageResponse } from "@/entities";
 
 export class ChatService {
     private static readonly BASE_URL = '/ai-chat/';
@@ -23,6 +23,11 @@ export class ChatService {
 
     public static async createChat(): Promise<IChat> {
         const response = await axiosWithToken.post(this.BASE_URL + "create")
+        return response.data
+    }
+
+    public static async generateOrFindResumeByChatId(chatId: string): Promise<any> {
+        const response = await axiosWithToken.get(this.BASE_URL + "resume/" + chatId)
         return response.data
     }
 }

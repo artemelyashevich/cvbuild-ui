@@ -3,10 +3,11 @@
 import Link from "next/link"
 import { ArrowRight, Sparkles, MessageSquare, LayoutTemplate, FileDown } from "lucide-react"
 import {LayoutHeader} from "@/widgets";
+import SmoothLink from "@/widgets/common/smooth-link";
 
 export default function LandingPage() {
   return (
-      <div className="min-h-screen bg-white text-zinc-900 font-sans pt-24">
+      <div style={{scrollBehavior: "smooth"}} className="min-h-screen bg-white text-zinc-900 font-sans pt-24">
         <LayoutHeader />
         {/* ===== Hero ===== */}
         <section className="max-w-7xl mx-auto px-6 pt-28 pb-24 text-center space-y-10">
@@ -57,9 +58,9 @@ export default function LandingPage() {
               </div>
             </Link>
 
-            <Link
-                href="#how"
-                className="
+            <SmoothLink href={"#how"}>
+              <div
+                  className="
               border
               border-zinc-200
               bg-white
@@ -75,10 +76,10 @@ export default function LandingPage() {
               transition-all
               hover:border-black
             "
-            >
-              Как это работает
-            </Link>
-
+              >
+                Как это работает
+              </div>
+            </SmoothLink>
           </div>
         </section>
 
