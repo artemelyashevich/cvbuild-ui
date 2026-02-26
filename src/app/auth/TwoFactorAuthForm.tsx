@@ -1,24 +1,40 @@
 'use client';
 
-import React, { useState, useRef, FormEvent, ClipboardEvent } from 'react';
+import React, { useState, useRef, FormEvent, ClipboardEvent, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Loader2, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Loader2, ShieldCheck, ArrowLeft, RefreshCcw } from "lucide-react";
 import { AxiosError } from "axios";
 
 interface TwoFactorAuthFormProps {
     email: string;
     verify2fa: (code: string) => Promise<void>;
+    resendCode: () => Promise<void>;
     onBack: () => void;
 }
 
-export default function TwoFactorAuthForm({ email, verify2fa, onBack }: Readonly<TwoFactorAuthFormProps>) {
+export default function TwoFactorAuthForm({ email, verify2fa, resendCode, onBack }: Readonly<TwoFactorAuthFormProps>) {
     const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
     const [loading, setLoading] = useState(false);
+    const [timer, setTimer] = useState(30); // таймер 30 секунд
+    const [canResend, setCanResend] = useState(false);
 
     const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+
+    useEffect(() => {
+        if (timer <= 0) {
+            setCanResend(true);
+            return;
+        }
+
+        const interval = setInterval(() => {
+            setTimer(prev => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [timer]);
 
     const handleOtpChange = (index: number, value: string) => {
         if (!/^\d*$/.test(value)) return;
@@ -61,7 +77,6 @@ export default function TwoFactorAuthForm({ email, verify2fa, onBack }: Readonly
             setLoading(true);
             await verify2fa(otpCode);
             toast.success('Успешный вход!');
-
         } catch (err) {
             const axiosError = err as AxiosError<{ message: string }>;
             const errorMessage = axiosError.response?.data?.message || 'Неверный код подтверждения';
@@ -69,6 +84,20 @@ export default function TwoFactorAuthForm({ email, verify2fa, onBack }: Readonly
 
             setOtp(['', '', '', '', '', '']);
             inputsRef.current[0]?.focus();
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleResend = async () => {
+        try {
+            setLoading(true);
+            await resendCode();
+            toast.success('Новый код отправлен!');
+            setTimer(30);
+            setCanResend(false);
+        } catch {
+            toast.error('Не удалось отправить новый код');
         } finally {
             setLoading(false);
         }
@@ -124,6 +153,20 @@ export default function TwoFactorAuthForm({ email, verify2fa, onBack }: Readonly
                         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Подтвердить'}
                     </Button>
                 </form>
+
+                <div className="flex flex-col items-center mt-4">
+                    <span className="text-sm text-zinc-500 mb-2">
+                        {canResend ? 'Вы можете сгенерировать новый код' : `Новый код через ${timer} сек`}
+                    </span>
+                    <Button
+                        disabled={!canResend || loading}
+                        onClick={handleResend}
+                        className="w-full h-12 rounded-[2rem] bg-zinc-800 text-white font-black uppercase tracking-widest hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                        <RefreshCcw className="w-4 h-4" />
+                        Сгенерировать новый код
+                    </Button>
+                </div>
 
             </CardContent>
         </Card>

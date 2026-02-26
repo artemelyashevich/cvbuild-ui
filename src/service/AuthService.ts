@@ -1,5 +1,5 @@
 import {axiosDefault, axiosWithToken} from "@/features";
-import {AuthRequest} from "@/entities";
+import {AuthRequest, AuthResponse} from "@/entities";
 import Cookies from "js-cookie";
 import {AxiosResponse} from "axios";
 
@@ -7,12 +7,22 @@ export class AuthService {
 
     private static readonly API_URL = '/auth';
 
-    public static async register(auth: AuthRequest): Promise<void> {
-       await AuthService.authenticate(auth, 'register')
+    public static async register(auth: AuthRequest): Promise<AuthResponse> {
+        const response = await AuthService.authenticate(auth, 'register')
+        const {accessToken, refreshToken} = await response.data;
+        Cookies.set("access_token", accessToken, {path: '/'});
+        Cookies.set("refresh_token", refreshToken, {path: '/'});
+        return {accessToken, refreshToken}
     }
 
-    public static async login(auth: AuthRequest): Promise<void> {
-        await AuthService.authenticate(auth, 'login')
+    public static async login(auth: AuthRequest): Promise<AuthResponse> {
+        const response = await AuthService.authenticate(auth, 'login')
+        const {accessToken, refreshToken, secondPhaseEnabled} = await response.data;
+        if (!secondPhaseEnabled) {
+            Cookies.set("access_token", accessToken, {path: '/'});
+            Cookies.set("refresh_token", refreshToken, {path: '/'});
+        }
+        return {accessToken, refreshToken, secondPhaseEnabled}
     }
 
     public static async logout(): Promise<void> {
@@ -25,14 +35,22 @@ export class AuthService {
         }
     }
 
-    private static async authenticate(auth: AuthRequest, path: string): Promise<void> {
-        const response: AxiosResponse = await axiosDefault.post(`${AuthService.API_URL}/${path}`, auth);
-        const {accessToken, refreshToken} = response.data;
-        Cookies.set("access_token", accessToken, {path: '/'});
-        Cookies.set("refresh_token", refreshToken, {path: '/'});
+    private static async authenticate(auth: AuthRequest, path: string): Promise<AxiosResponse> {
+        return await axiosDefault.post(`${AuthService.API_URL}/${path}`, auth);
     }
 
-    static async verify2fa(param: { email: string; code: string }) {
-        await axiosDefault.post(`${AuthService.API_URL}/2fa`, param);
+    public static async refreshCode(email: string): Promise<void> {
+        return await axiosDefault.post(`${AuthService.API_URL}/2fa/refresh`, {email: email});
     }
+
+    public static async verify2fa(param: { email: string; code: string }) {
+        const response = await axiosDefault.post(`${AuthService.API_URL}/2fa`, param);
+        const {accessToken, refreshToken, secondPhaseEnabled} = await response.data;
+        if (!secondPhaseEnabled) {
+            Cookies.set("access_token", accessToken, {path: '/'});
+            Cookies.set("refresh_token", refreshToken, {path: '/'});
+        }
+    }
+
+
 }

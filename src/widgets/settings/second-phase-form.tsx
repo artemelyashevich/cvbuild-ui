@@ -12,11 +12,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { ShieldAlert, ShieldCheck, Loader2, Smartphone } from "lucide-react";
 import useEnable2fa from "@/features/hooks/use-2fa-enable";
+import {useAuth} from "@/features";
 
 export default function SecondPhaseForm() {
     const { mutate, loading, error } = useEnable2fa();
-
-    const [isSuccess, setIsSuccess] = useState(false);
+    const {user} = useAuth()
+    const [isSuccess, setIsSuccess] = useState(user?.secondAuthPhase);
 
     const handleEnable2fa = () => {
         mutate(undefined, {

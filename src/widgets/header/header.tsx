@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { IProfile } from "@/entities";
@@ -16,10 +16,10 @@ interface HeaderProps {
 export function LayoutHeader({ user }: Readonly<HeaderProps>) {
     const pathname = usePathname();
     const isLoggedIn = Boolean(user?.id);
-
-    const handleLogout = () => {
-        AuthService.logout();
-        window.location.href = "/auth";
+    const {push} = useRouter();
+    const handleLogout = async () => {
+        await AuthService.logout();
+        push("/auth");
     };
 
     const renderUserMenu = () => (

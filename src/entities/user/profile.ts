@@ -1,3 +1,4 @@
+
 export interface IProfile {
     id: string;
     firstName?: string;
@@ -5,6 +6,7 @@ export interface IProfile {
     email?: string;
     login: string;
     emailVerified: boolean;
+    secondAuthPhase?: boolean;
     createdAt: string;
     avatarUrl?: string;
 }

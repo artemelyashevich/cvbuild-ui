@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { AuthRequest } from "@/entities";
+import {AuthRequest, AuthResponse} from "@/entities";
 import { AuthService } from "@/service/AuthService";
 import { LoginButton } from "@/widgets";
 import { AxiosError } from 'axios';
@@ -50,8 +50,8 @@ export function Auth() {
         mutationKey: ['auth'],
         mutationFn: (data: AuthRequest) =>
             isLogin ? AuthService.login(data) : AuthService.register(data),
-        onSuccess: (response: any) => {
-            if (response?.mfaRequired) {
+        onSuccess: (response: AuthResponse) => {
+            if (response?.secondPhaseEnabled) {
                 setIs2faStep(true);
                 toast.info('Требуется двухфакторная аутентификация');
             } else {
@@ -93,6 +93,10 @@ export function Auth() {
         push("/profile");
     };
 
+    const refreshCode= async () => {
+        await AuthService.refreshCode(authEmail)
+    }
+
     return (
         <div className="flex flex-col items-center justify-center px-6 py-12 md:h-screen font-sans bg-zinc-50">
 
@@ -100,6 +104,7 @@ export function Auth() {
                 <TwoFactorAuthForm
                     email={authEmail}
                     verify2fa={handleVerify2fa}
+                    resendCode={refreshCode}
                     onBack={() => {
                         setIs2faStep(false);
                         setServerError(null);

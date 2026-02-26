@@ -21,7 +21,8 @@ export function ProfileForm({user}: Readonly<{ user: IProfile }>) {
     const {register, handleSubmit} = useForm({
         defaultValues: {
             firstName: user?.firstName || "",
-            lastName: user?.lastName || ""
+            lastName: user?.lastName || "",
+            email: user?.email || "",
         }
     });
 
@@ -29,7 +30,7 @@ export function ProfileForm({user}: Readonly<{ user: IProfile }>) {
 
     const {push} = useRouter()
 
-    const onSubmit = async (data: { firstName: string; lastName: string }) => {
+    const onSubmit = async (data: { firstName: string; lastName: string, email: string }) => {
         updateProfile(data);
 
         if (selectedFile && user.id) {
@@ -72,6 +73,14 @@ export function ProfileForm({user}: Readonly<{ user: IProfile }>) {
                                 id="lastName"
                                 disabled={isPending}
                                 {...register("lastName", {required: true})}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="lastName">Email</Label>
+                            <Input
+                                id="email"
+                                disabled={isPending}
+                                {...register("email", {required: true})}
                             />
                         </div>
                     </div>
