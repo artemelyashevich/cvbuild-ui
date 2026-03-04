@@ -13,7 +13,7 @@ import {
     arrayMove,
 } from "@dnd-kit/sortable";
 import SortableSection from "@/widgets/resume/sortable-section";
-import {useResumeStore} from "@/features/store/resume-store";
+import {useConstructorStore} from "@/features/store/constructor-store";
 import TemplateSelector from "@/widgets/resume/template-selector";
 import ResumePreview from "@/widgets/resume/resume-preview";
 import AddSection from "@/widgets/resume/add-section";
@@ -26,7 +26,7 @@ export default function ResumeForm({ initialData }: any) {
         setData,
         sectionOrder,
         reorderSections,
-    } = useResumeStore();
+    } = useConstructorStore();
 
     useEffect(() => {
         setData(initialData);

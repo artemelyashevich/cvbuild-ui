@@ -10,10 +10,10 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
-import {FieldType, useResumeStore} from "@/features/store/resume-store";
+import {FieldType, useConstructorStore} from "@/features/store/constructor-store";
 
 export default function AddField({ path }: { path: string[] }) {
-    const addField = useResumeStore((s) => s.addField);
+    const addField = useConstructorStore((s) => s.addField);
 
     const [key, setKey] = useState("");
     const [type, setType] = useState<FieldType>("string");

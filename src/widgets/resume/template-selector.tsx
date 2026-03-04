@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {useResumeStore} from "@/features/store/resume-store";
+import {useConstructorStore} from "@/features/store/constructor-store";
 
 export default function TemplateSelector() {
-    const { template, setTemplate } = useResumeStore();
+    const { template, setTemplate } = useConstructorStore();
 
     return (
         <div className="flex gap-3">

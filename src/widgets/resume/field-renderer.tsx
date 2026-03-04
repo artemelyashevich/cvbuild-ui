@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import {useResumeStore} from "@/features/store/resume-store";
+import {useConstructorStore} from "@/features/store/constructor-store";
 import {Textarea} from "@/components/ui/textarea";
 import ArrayField from "@/widgets/resume/array-field";
 import ObjectField from "@/widgets/resume/object-field";
@@ -14,7 +14,7 @@ type Props = {
     label?: string;
 };
 export default function FieldRenderer({ value, path, label }: Props) {
-    const updateValue = useResumeStore((s) => s.updateValue);
+    const updateValue = useConstructorStore((s) => s.updateValue);
 
     const renderInput = () => {
         if (Array.isArray(value)) {

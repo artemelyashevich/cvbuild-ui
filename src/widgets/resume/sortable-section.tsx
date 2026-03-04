@@ -5,14 +5,14 @@ import { Input } from "@/components/ui/input";
 import {GripVertical, Trash} from "lucide-react";
 import FieldRenderer from "@/widgets/resume/field-renderer";
 import { useSortable } from "@dnd-kit/sortable";
-import { useResumeStore } from "@/features/store/resume-store";
+import { useConstructorStore } from "@/features/store/constructor-store";
 import { useState } from "react";
 import {Button} from "@/components/ui/button";
 
 export default function SortableSection({ id, value }: any) {
     const { attributes, listeners, setNodeRef } = useSortable({ id });
-    const renameSection = useResumeStore((s) => s.renameSection);
-    const removeSection = useResumeStore((s) => s.removeSection);
+    const renameSection = useConstructorStore((s) => s.renameSection);
+    const removeSection = useConstructorStore((s) => s.removeSection);
     const [title, setTitle] = useState(id);
 
     const handleBlur = () => {

@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {useResumeStore} from "@/features/store/resume-store";
+import {useConstructorStore} from "@/features/store/constructor-store";
 
 export default function AddSection() {
     const [name, setName] = useState("");
-    const addSection = useResumeStore((s) => s.addSection);
+    const addSection = useConstructorStore((s) => s.addSection);
 
     const handleAdd = () => {
         if (!name.trim()) return;

@@ -2,11 +2,11 @@
 
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Button } from "@/components/ui/button";
-import { useResumeStore } from "@/features/store/resume-store";
+import { useConstructorStore } from "@/features/store/constructor-store";
 import ResumePDF from "@/widgets/resume/pdf-doc";
 
 export default function ExportPDF() {
-    const { data, sectionOrder } = useResumeStore();
+    const { data, sectionOrder } = useConstructorStore();
 
     return (
         <PDFDownloadLink

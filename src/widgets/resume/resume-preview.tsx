@@ -1,10 +1,10 @@
 "use client";
 
 
-import {useResumeStore} from "@/features";
+import {useConstructorStore} from "@/features";
 
 export default function ResumePreview() {
-    const { data, sectionOrder, template } = useResumeStore();
+    const { data, sectionOrder, template } = useConstructorStore();
     const blocks = data.blocks || {};
 
     return (

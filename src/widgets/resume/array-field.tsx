@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Plus, Trash } from "lucide-react";
 import FieldRenderer from "@/widgets/resume/field-renderer";
-import {useResumeStore} from "@/features/store/resume-store";
+import {useConstructorStore} from "@/features/store/constructor-store";
 
 export default function ArrayField({ value, path, label }: any) {
-    const { addArrayItem, removeArrayItem } = useResumeStore();
+    const { addArrayItem, removeArrayItem } = useConstructorStore();
 
     return (
         <div className="space-y-3">

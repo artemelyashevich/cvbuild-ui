@@ -1,13 +1,12 @@
 'use client'
 
-import React, {FormEvent} from 'react';
+import React, {FormEvent, useState} from 'react';
 import {Card, CardContent} from "@/components/ui/card";
 import {
     MessageSquare,
     Sparkles,
     LayoutTemplate,
     Download,
-    ChevronRight,
     Star,
     Loader2
 } from "lucide-react";
@@ -17,11 +16,51 @@ import {cn} from "@/lib/utils";
 import {toast} from "sonner";
 import {Button} from "@/components/ui/button";
 import useAgree from "@/features/hooks/use-agree";
+import {PopupSelector} from "@/widgets";
 
 export default function AiWelcomePage() {
-    const {mutateAsync, loading} = useCreateChat();
-    const {mutateAsync: agree, loading: agreeLoading} = useAgree()
+    const {mutateAsync: createChat} = useCreateChat();
+    const {mutateAsync: agree, loading: agreeLoading} = useAgree();
     const {push} = useRouter();
+
+    const [popupOpen, setPopupOpen] = useState(false);
+    const [chatLoading, setChatLoading] = useState(false);
+
+    const handleStartClick = () => setPopupOpen(true);
+
+    const handleGoToChat = async () => {
+        setChatLoading(true);
+        try {
+            const data = await createChat();
+            if (data?.id) {
+                push(`/builder/stage/ai-chat/${data.id}`);
+            } else {
+                push(`/builder/stage/ai-chat/new-chat`);
+            }
+        } catch (e) {
+            console.error(e as Error);
+            toast.error("Ошибка при создании чата.");
+        } finally {
+            setPopupOpen(false);
+            setChatLoading(false);
+        }
+    };
+
+    const handleGoToForm = () => {
+        push('/builder/stage/flow');
+        setPopupOpen(false);
+    };
+
+    const handleAgreeSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        try {
+            await agree();
+            toast.success("Ваше согласие подтверждено!");
+        } catch (e) {
+            console.error(e as Error);
+            toast.error("Для этого действия необходимо верифицировать почту");
+        }
+    };
 
     const steps = [
         {
@@ -36,7 +75,7 @@ export default function AiWelcomePage() {
             description: "Профессиональные описания и адаптация под ATS.",
             icon: <Sparkles className="w-6 h-6"/>,
             badge: "1 Point",
-            highlight: true // Visually distinct
+            highlight: true
         },
         {
             title: "Дизайн",
@@ -59,7 +98,6 @@ export default function AiWelcomePage() {
             className="min-h-screen bg-white text-zinc-950 flex flex-col items-center justify-center p-6 md:p-12 font-sans selection:bg-[#D6FF00] selection:text-black">
             <div className="max-w-5xl w-full space-y-12">
 
-                {/* --- Header Section --- */}
                 <div
                     className="text-center space-y-6 mt-4 md:mt-0 animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.85] select-none">
@@ -77,14 +115,12 @@ export default function AiWelcomePage() {
                     </p>
                 </div>
 
-                {/* --- Cards Grid --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {steps.map((step, index) => (
                         <Card
                             key={index}
                             className="relative overflow-hidden border border-zinc-100 bg-zinc-50/50 shadow-sm rounded-[2.5rem] hover:bg-white hover:border-black hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
                         >
-                            {/* Giant Background Number */}
                             <div
                                 className="absolute -right-4 -bottom-10 text-[10rem] font-black text-zinc-100 group-hover:text-zinc-50 select-none transition-colors pointer-events-none z-0 leading-none">
                                 0{index + 1}
@@ -119,24 +155,20 @@ export default function AiWelcomePage() {
                         </Card>
                     ))}
                 </div>
-                <form onSubmit={async e => {
-                    e.preventDefault();
-                    try {
-                        await agree()
-                        toast.success("Your are confirmed agreement!")
-                    } catch (e) {
-                        console.error(e as Error);
-                        toast.error("Для этого действия необходоимо верифицировать почту")
-                    }
-                }}>
-                    <Button type={"submit"}><span>Разрешить обработку персональных данных</span></Button>
+
+                <form onSubmit={handleAgreeSubmit} className="text-center">
+                    <Button type={"submit"} disabled={agreeLoading}>
+                        {agreeLoading ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin"/>
+                        ) : (
+                            <span>Разрешить обработку персональных данных</span>
+                        )}
+                    </Button>
                 </form>
 
-                {/* --- Bottom Action Section --- */}
                 <div
-                    className="bg-zinc-900 rounded-[3rem] p-2 md:p-3 flex flex-col md:flex-row gap-6 items-center shadow-2xl shadow-zinc-200">
+                    className="bg-zinc-900 rounded-[3rem] p-2 md:p-3 flex flex-col md:flex-row gap-6 items-center shadow-2xl">
 
-                    {/* Information Block */}
                     <div className="flex-1 px-6 py-4 md:py-2 text-center md:text-left">
                         <div
                             className="flex items-center justify-center md:justify-start gap-2 text-[#D6FF00] font-bold uppercase tracking-widest text-xs mb-1">
@@ -148,56 +180,33 @@ export default function AiWelcomePage() {
                         </p>
                     </div>
 
-                    {/* Action Button */}
-                    <form
-                        onSubmit={async (e: FormEvent<HTMLFormElement>) => {
-                            e.preventDefault();
-                            try {
-                                const data = await mutateAsync();
-                                if (data?.id) {
-                                    push(`/builder/stage/ai-chat/${data.id}`);
-                                }
-                            } catch (e) {
-                                console.error(e as Error);
-                                toast.error("Вам необходимо предоставить разрешение на обработку персональных данных")
-                            }
-                        }}
-                        className="w-full md:w-auto shrink-0"
-                    >
+                    <div className="w-full md:w-auto shrink-0">
                         <button
-                            type="submit"
-                            disabled={loading}
+                            onClick={handleStartClick}
                             className="group relative w-full md:w-auto bg-[#D6FF00] text-black h-16 md:h-20 px-12 rounded-[2.5rem] font-black uppercase tracking-wider text-sm md:text-base flex items-center justify-center gap-3 transition-all hover:brightness-105 active:scale-95 overflow-hidden"
                         >
-                            {/* Button Hover Glow Effect */}
                             <div
                                 className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 rounded-[2.5rem]"/>
 
                             <span className="relative flex items-center gap-3">
-                                {loading ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin"/>
-                                        Создаем чат...
-                                    </>
-                                ) : (
-                                    <>
-                                        Начать интервью
-                                        <div
-                                            className="bg-black text-[#D6FF00] rounded-full p-1 transition-transform group-hover:translate-x-1">
-                                            <ChevronRight className="w-4 h-4 stroke-[4]"/>
-                                        </div>
-                                    </>
-                                )}
+                                Начать интервью
                             </span>
                         </button>
-                    </form>
+                    </div>
                 </div>
 
-                {/* Footer Disclaimer */}
                 <p className="text-center text-[10px] uppercase tracking-[0.2em] text-zinc-300 font-bold hover:text-zinc-400 transition-colors cursor-help">
                     Поинты списываются только после утверждения текста
                 </p>
             </div>
+
+            <PopupSelector
+                isOpen={popupOpen}
+                onClose={() => setPopupOpen(false)}
+                onChat={handleGoToChat}
+                onForm={handleGoToForm}
+                loading={chatLoading}
+            />
         </div>
     );
 }
