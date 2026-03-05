@@ -1,38 +1,51 @@
 'use client';
 
 import { useState } from 'react';
-import LinkedinStep from "@/widgets/steps/linkedin-step";
-import WorkExperienceStep from "@/widgets/steps/work-experience-step";
-import SkillsStep from "@/widgets/steps/skills-step";
-import HighlightsStep from "@/widgets/steps/highlights-step";
-import JobNameStep from "@/widgets/steps/job-step";
-import EducationStep from "@/widgets/steps/education-step";
-import CareerGoalsStep from "@/widgets/steps/career-step";
+import CategoryStep, { ResumeStepData } from '@/widgets/steps/category-step';
+import useResumeFlowQuestions from "@/features/hooks/use-resume-flow-questions";
+import { useResumeStore } from "@/features/store/resume-store";
+import {useSendResumeFlowForm} from "@/features";
 
 export default function ResumeFlowPage() {
+    const { data, loading } = useResumeFlowQuestions();
     const [step, setStep] = useState(0);
+    const resume = useResumeStore();
+    const {mutate} = useSendResumeFlowForm()
 
-    const total = 7;
+    if (loading) return <div>Loading...</div>;
+    if (!data) return <div>No data</div>;
+
+    const categories = [
+        'personal_information',
+        'links',
+        'job',
+        'education',
+        'skills',
+        'highlights',
+        'career_goals'
+    ] as const;
+
+    const total = categories.length;
+
+    if (step >= total) {
+        mutate()
+        return <div>All steps completed!</div>
+    }
+
+    const categoryName = categories[step];
+    const stepData: ResumeStepData = data[categoryName] as unknown as ResumeStepData;
 
     const next = () => setStep((s) => s + 1);
     const back = () => setStep((s) => s - 1);
 
-    switch (step) {
-        case 0:
-            return <LinkedinStep step={1} total={total} next={next} />;
-        case 1:
-            return <WorkExperienceStep step={2} total={total} next={next} back={back} />;
-        case 2:
-            return <JobNameStep step={3} total={total} next={next} back={back} />;
-        case 3:
-            return <EducationStep step={4} total={total} next={next} back={back} />;
-        case 4:
-            return <SkillsStep step={5} total={total} next={next} back={back} />;
-        case 5:
-            return <HighlightsStep step={6} total={total} next={next} back={back} />;
-        case 6:
-            return <CareerGoalsStep step={7} total={total} back={back} />;
-        default:
-            return <div>Done</div>;
-    }
+    return (
+        <CategoryStep
+            stepIndex={step}
+            total={total}
+            next={next}
+            back={back}
+            categoryName={categoryName}
+            stepData={stepData}
+        />
+    );
 }
