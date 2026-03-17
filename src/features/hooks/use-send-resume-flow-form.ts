@@ -35,6 +35,8 @@ export const useSendResumeFlowForm = () => {
     };
 
     return useMutation({
+        mutationKey: ['sendResumeFlowForm'],
+
         mutationFn: () => ResumeFlowService.sendResume(body),
 
         onMutate: () => {

@@ -7,6 +7,7 @@ export interface IProfile {
     login: string;
     emailVerified: boolean;
     secondAuthPhase?: boolean;
+    role: string;
     createdAt: string;
     avatarUrl?: string;
 }

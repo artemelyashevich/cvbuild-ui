@@ -1,8 +1,13 @@
 import {axiosWithToken} from "@/features";
+import {ISettings} from "@/entities";
 
 export class SettingsService {
 
     private static readonly API_URL = '/settings';
+
+    public static async findSettings(): Promise<ISettings> {
+        return axiosWithToken.get(this.API_URL)
+    }
 
     public static async agree(): Promise<void> {
         await axiosWithToken.post(this.API_URL + "/agree")

@@ -5,3 +5,4 @@ export * from './user/profile'
 export * from './user/stats'
 export * from './chat/chat'
 export * from "./common/common"
+export * from "./settings/settings"

@@ -2,8 +2,25 @@
 
 import { create } from "zustand";
 import { arrayMove } from "@dnd-kit/sortable";
+import {axiosWithToken} from "@/features";
 
-export type TemplateType = "modern" | "classic" | "minimal";
+export type TemplateType = {
+    id: string;
+    name: string;
+
+    layout: {
+        sectionOrder: string[];
+        columns?: number;
+    };
+
+    styles: {
+        header: string;
+        sectionTitle: string;
+        text: string;
+    };
+
+    defaultBlocks: Record<string, any>;
+} | null;
 export type FieldType = "string" | "number" | "boolean" | "array" | "object";
 
 type ConstructorStore = {
@@ -18,7 +35,7 @@ type ConstructorStore = {
     reorderSections: (newOrder: string[]) => void;
     reorderFields: (section: string, oldIndex: number, newIndex: number) => void;
 
-    setTemplate: (template: TemplateType) => void;
+    setTemplate: (template: string) => Promise<any>;
 
     addSection: (name: string) => void;
     addField: (path: string[], key: string, type: FieldType) => void;
@@ -49,7 +66,7 @@ export const useConstructorStore = create<ConstructorStore>((set) => ({
     data: {},
     sectionOrder: [],
     fieldOrder: {},
-    template: "modern",
+    template: null,
 
     setData: (data) =>
         set(() => {
@@ -86,7 +103,18 @@ export const useConstructorStore = create<ConstructorStore>((set) => ({
             },
         })),
 
-    setTemplate: (template) => set({ template }),
+    setTemplate: async (templateId: string): Promise<void> => {
+        const res = await axiosWithToken(`/templates/${templateId}`);
+        const template = await res.data();
+
+        set({
+            template,
+            data: {
+                blocks: template.defaultBlocks
+            },
+            sectionOrder: template.layout.sectionOrder
+        });
+    },
 
     addSection: (name) =>
         set((state) => ({

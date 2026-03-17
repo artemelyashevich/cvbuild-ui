@@ -14,7 +14,7 @@ import {
 } from "@dnd-kit/sortable";
 import SortableSection from "@/widgets/resume/sortable-section";
 import {useConstructorStore} from "@/features/store/constructor-store";
-import TemplateSelector from "@/widgets/resume/template-selector";
+import TemplateSelector from "@/widgets/template/template-selector";
 import ResumePreview from "@/widgets/resume/resume-preview";
 import AddSection from "@/widgets/resume/add-section";
 import ExportPDF from "@/widgets/resume/export-pdf";

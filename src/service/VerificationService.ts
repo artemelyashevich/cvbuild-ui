@@ -8,7 +8,7 @@ export class VerificationService {
         await axiosWithToken.post(VerificationService.API_URL, {email: email});
     }
 
-    public static async checkOtp(otp: string): Promise<void> {
+    public static async checkOtp(email: string, otp: string): Promise<void> {
         await axiosWithToken.post(VerificationService.API_URL + "/check", {otp: otp});
     }
 }

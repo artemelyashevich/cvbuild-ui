@@ -4,11 +4,15 @@ import {useAuth} from "@/features";
 import {Separator} from "@/components/ui/separator";
 import {Loader2} from "lucide-react";
 import SettingContent from "@/widgets/settings/settings-content";
+import {useEffect, useState} from "react";
+import {SettingsService} from "@/service/SettingsService";
+import {ISettings} from "@/entities";
+import useSettings from "@/features/hooks/use-settings";
 
 export default function SettingsPage() {
     const {user, loading} = useAuth();
-
-    if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin"/></div>;
+    const {data: settings, loading: settingsLoading} = useSettings();
+    if (loading || settingsLoading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin"/></div>;
 
     return <div className="container max-w-4xl py-10 px-4 space-y-6">
         <header>
@@ -17,6 +21,6 @@ export default function SettingsPage() {
         </header>
 
         <Separator/>
-        <SettingContent user={user}/>
+        <SettingContent settings = {settings} user={user}/>
     </div>
 }

@@ -4,13 +4,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileForm } from "./profile-form";
 import { SecurityForm } from "./security-form";
 import { NotificationsTab } from "./notifications-form";
-import { IProfile } from "@/entities";
+import {IProfile, ISettings} from "@/entities";
 
 interface Props {
     user: IProfile | undefined;
+    settings: ISettings | undefined;
 }
 
-export default function SettingContent({ user }: Readonly<Props>) {
+export default function SettingContent({ user, settings }: Readonly<Props>) {
     return (
         <div className="w-full mx-auto p-6 space-y-8">
             <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
@@ -51,7 +52,7 @@ export default function SettingContent({ user }: Readonly<Props>) {
                 </TabsContent>
 
                 <TabsContent value="security">
-                    <SecurityForm />
+                    <SecurityForm settings = {settings} />
                 </TabsContent>
 
                 <TabsContent value="notifications">

@@ -9,20 +9,22 @@ export class AuthService {
 
     public static async register(auth: AuthRequest): Promise<AuthResponse> {
         const response = await AuthService.authenticate(auth, 'register')
-        const {accessToken, refreshToken} = await response.data;
+        const {accessToken, refreshToken, role} = await response.data;
         Cookies.set("access_token", accessToken, {path: '/'});
         Cookies.set("refresh_token", refreshToken, {path: '/'});
-        return {accessToken, refreshToken}
+        localStorage.setItem("role", role);
+        return {accessToken, refreshToken, role}
     }
 
     public static async login(auth: AuthRequest): Promise<AuthResponse> {
         const response = await AuthService.authenticate(auth, 'login')
-        const {accessToken, refreshToken, secondPhaseEnabled} = await response.data;
+        const {accessToken, refreshToken, secondPhaseEnabled, role} = await response.data;
         if (!secondPhaseEnabled) {
             Cookies.set("access_token", accessToken, {path: '/'});
             Cookies.set("refresh_token", refreshToken, {path: '/'});
+            localStorage.setItem("role", role);
         }
-        return {accessToken, refreshToken, secondPhaseEnabled}
+        return {accessToken, refreshToken, secondPhaseEnabled, role}
     }
 
     public static async logout(): Promise<void> {
@@ -31,6 +33,7 @@ export class AuthService {
         } finally {
             Cookies.remove('access_token');
             Cookies.remove('refresh_token');
+            localStorage.removeItem("role");
             localStorage.removeItem('id');
         }
     }
@@ -45,10 +48,11 @@ export class AuthService {
 
     public static async verify2fa(param: { email: string; code: string }) {
         const response = await axiosDefault.post(`${AuthService.API_URL}/2fa`, param);
-        const {accessToken, refreshToken, secondPhaseEnabled} = await response.data;
+        const {accessToken, refreshToken, secondPhaseEnabled, role} = await response.data;
         if (!secondPhaseEnabled) {
             Cookies.set("access_token", accessToken, {path: '/'});
             Cookies.set("refresh_token", refreshToken, {path: '/'});
+            localStorage.setItem("role", role);
         }
     }
 

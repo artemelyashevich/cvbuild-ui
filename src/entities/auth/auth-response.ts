@@ -2,4 +2,5 @@ export type AuthResponse = {
     accessToken: string;
     refreshToken: string;
     secondPhaseEnabled?: boolean;
+    role: string;
 }
