@@ -12,7 +12,7 @@ export class AuthService {
         const {accessToken, refreshToken, role} = await response.data;
         Cookies.set("access_token", accessToken, {path: '/'});
         Cookies.set("refresh_token", refreshToken, {path: '/'});
-        localStorage.setItem("role", role);
+        Cookies.set("role", role, {path: "/"});
         return {accessToken, refreshToken, role}
     }
 
@@ -22,7 +22,7 @@ export class AuthService {
         if (!secondPhaseEnabled) {
             Cookies.set("access_token", accessToken, {path: '/'});
             Cookies.set("refresh_token", refreshToken, {path: '/'});
-            localStorage.setItem("role", role);
+            Cookies.set("role", role, {path: "/"});
         }
         return {accessToken, refreshToken, secondPhaseEnabled, role}
     }
@@ -33,7 +33,7 @@ export class AuthService {
         } finally {
             Cookies.remove('access_token');
             Cookies.remove('refresh_token');
-            localStorage.removeItem("role");
+            Cookies.remove("role");
             localStorage.removeItem('id');
         }
     }
@@ -52,9 +52,7 @@ export class AuthService {
         if (!secondPhaseEnabled) {
             Cookies.set("access_token", accessToken, {path: '/'});
             Cookies.set("refresh_token", refreshToken, {path: '/'});
-            localStorage.setItem("role", role);
+            Cookies.set("role", role, {path: "/"});
         }
     }
-
-
 }

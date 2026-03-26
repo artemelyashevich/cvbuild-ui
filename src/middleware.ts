@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
     const token = request.cookies.get("access_token")?.value;
+    const role = request.cookies.get("role")?.value;
 
     if (!token && !request.nextUrl.pathname.startsWith("/auth")) {
         return NextResponse.redirect(new URL("/auth", request.url));
@@ -10,6 +11,10 @@ export function middleware(request: NextRequest) {
 
     if (token && request.nextUrl.pathname.startsWith("/auth")) {
         return NextResponse.redirect(new URL("/profile", request.url));
+    }
+
+    if (request.nextUrl.pathname.startsWith("/admin") && !role?.includes("ADMIN")) {
+        return NextResponse.redirect(new URL("/forbidden", request.url));
     }
 
     return NextResponse.next();

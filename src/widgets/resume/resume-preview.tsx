@@ -1,100 +1,82 @@
 "use client";
 
 import { useConstructorStore } from "@/features";
-import { useTemplateStore } from "@/features/store/template-store";
-import { cn } from "@/lib/utils";
 
 export default function ResumePreview() {
     const { data } = useConstructorStore();
-    const { currentTemplate } = useTemplateStore();
 
-    const blocks = data.blocks || {};
-    const sectionOrder = currentTemplate?.layout?.sectionOrder || [];
-    const columns = currentTemplate?.layout?.columns || 1;
+    const blocks = data?.blocks || {};
 
-    if (!currentTemplate) {
+    if (!blocks || Object.keys(blocks).length === 0) {
         return (
             <div className="flex items-center justify-center h-full text-gray-500">
-                Выберите шаблон для предварительного просмотра.
+                Нет данных для отображения резюме
             </div>
         );
     }
 
-    const headerStyle = currentTemplate.styles.header;
-    const sectionTitleStyle = currentTemplate.styles.sectionTitle;
-    const textStyle = currentTemplate.styles.text;
+    const renderContent = (content: any) => {
+        if (typeof content === "string" || typeof content === "number") {
+            return <p>{content}</p>;
+        }
 
-    const gridClasses = {
-        1: "grid-cols-1",
-        2: "grid-cols-1 md:grid-cols-2",
-        3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+        if (Array.isArray(content)) {
+            return content.map((item, i) => (
+                <div key={i} className="mb-3">
+                    {typeof item === "object" ? (
+                        Object.entries(item).map(([key, value]) => (
+                            <p key={key}>
+                                <span className="font-semibold">
+                                    {key}:
+                                </span>{" "}
+                                {String(value)}
+                            </p>
+                        ))
+                    ) : (
+                        <p>{item}</p>
+                    )}
+                </div>
+            ));
+        }
+
+        if (typeof content === "object" && content !== null) {
+            return Object.entries(content).map(([key, value]) => (
+                <p key={key}>
+                    <span className="font-semibold">{key}:</span>{" "}
+                    {String(value)}
+                </p>
+            ));
+        }
+
+        return null;
     };
 
     return (
-        <div className="h-[90vh] overflow-auto sticky top-20 p-4">
-            <div
-                className={cn(
-                    "bg-white shadow-2xl rounded-2xl p-8 md:p-10 lg:p-12",// Для плавных переходов при изменении стилей
-                    )}
-                style={{ minHeight: "80vh" }}
-            >
+        <div className="h-[90vh] overflow-auto p-4">
+            <div className="bg-white shadow-xl rounded-xl p-8 max-w-4xl mx-auto">
+
+                {/* TITLE */}
                 {data.title && (
-                    <h1 className={cn("mb-8 text-center", headerStyle)}>
+                    <h1 className="text-3xl font-bold mb-6 text-center">
                         {data.title}
                     </h1>
                 )}
 
-                <div className={cn("grid gap-8", gridClasses[columns as keyof typeof gridClasses])}>
-                    {sectionOrder.map((sectionKey) => {
-                        const sectionContent = blocks[sectionKey];
+                {/* SECTIONS */}
+                <div className="space-y-6">
+                    {Object.entries(blocks).map(([sectionName, content]) => (
+                        <div key={sectionName}>
+                            <h2 className="text-xl font-semibold mb-2">
+                                {sectionName}
+                            </h2>
 
-                        if (!sectionContent || Object.keys(sectionContent).length === 0) {
-                            return null;
-                        }
-
-                        return (
-                            <div key={sectionKey} className="break-inside-avoid-column">
-                                <h2 className={cn("mb-4 capitalize", sectionTitleStyle)}>
-                                    {sectionKey.replace(/-/g, ' ')}
-                                </h2>
-
-                                <div className={cn("space-y-3", textStyle)}>
-                                    {Object.entries(sectionContent).map(([key, value]) => (
-                                        <div key={key}>
-                                            {typeof value === "string" || typeof value === "number" ? (
-                                                <p>
-                                                    <span className="font-semibold capitalize">{key.replace(/-/g, ' ')}:</span>{" "}
-                                                    {value}
-                                                </p>
-                                            ) : Array.isArray(value) ? (
-                                                <div>
-                                                    {value.length > 0 && <p className="font-semibold capitalize">{key.replace(/-/g, ' ')}:</p>}
-                                                    <ul className="list-disc ml-6 mt-1 space-y-1">
-                                                        {value.map((item, i) => (
-                                                            <li key={i}>{typeof item === 'string' ? item : JSON.stringify(item)}</li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            ) : typeof value === "object" && value !== null ? (
-                                                <div className="mb-2">
-                                                    <p className="font-semibold capitalize">{key.replace(/-/g, ' ')}</p>
-                                                    <div className="ml-4 space-y-1">
-                                                        {Object.entries(value).map(([subKey, subValue]) => (
-                                                            <p key={subKey}>
-                                                                <span className="font-medium capitalize">{subKey.replace(/-/g, ' ')}:</span>{" "}
-                                                                {typeof subValue === 'string' || typeof subValue === 'number' ? subValue : JSON.stringify(subValue)}
-                                                            </p>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ) : null}
-                                        </div>
-                                    ))}
-                                </div>
+                            <div className="space-y-2">
+                                {renderContent(content)}
                             </div>
-                        );
-                    })}
+                        </div>
+                    ))}
                 </div>
+
             </div>
         </div>
     );

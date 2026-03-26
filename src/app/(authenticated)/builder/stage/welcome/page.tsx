@@ -17,11 +17,14 @@ import {toast} from "sonner";
 import {Button} from "@/components/ui/button";
 import useAgree from "@/features/hooks/use-agree";
 import {PopupSelector} from "@/widgets";
+import useSettings from "@/features/hooks/use-settings";
 
 export default function AiWelcomePage() {
     const {mutateAsync: createChat} = useCreateChat();
     const {mutateAsync: agree, loading: agreeLoading} = useAgree();
     const {push} = useRouter();
+
+    const {data, loading: settingsLoading} = useSettings()
 
     const [popupOpen, setPopupOpen] = useState(false);
     const [chatLoading, setChatLoading] = useState(false);
@@ -93,6 +96,8 @@ export default function AiWelcomePage() {
         }
     ];
 
+    if (settingsLoading) return <Loader2 />;
+
     return (
         <div
             className="min-h-screen bg-white text-zinc-950 flex flex-col items-center justify-center p-6 md:p-12 font-sans selection:bg-[#D6FF00] selection:text-black">
@@ -161,7 +166,7 @@ export default function AiWelcomePage() {
                         {agreeLoading ? (
                             <Loader2 className="w-4 h-4 mr-2 animate-spin"/>
                         ) : (
-                            <span>Разрешить обработку персональных данных</span>
+                            <span> {data.data?.agree ? 'Запретить' : 'Разрешить'} обработку персональных данных</span>
                         )}
                     </Button>
                 </form>

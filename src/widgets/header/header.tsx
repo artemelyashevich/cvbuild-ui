@@ -15,7 +15,7 @@ interface HeaderProps {
 
 export function LayoutHeader({ user }: Readonly<HeaderProps>) {
     const pathname = usePathname();
-    const isLoggedIn = Boolean(user?.id);
+    const isLoggedIn = true//localStorage.getItem("id") == null;
     const {push} = useRouter();
     const handleLogout = async () => {
         await AuthService.logout();
