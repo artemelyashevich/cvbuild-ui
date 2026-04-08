@@ -1,10 +1,9 @@
 import {CreateResumePlaceholder, ResumeCard} from "./resume-card";
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
-import {ChatService} from "@/service/ChatService";
 import {useState} from "react";
 import {ChevronLeft, ChevronRight, Loader2} from "lucide-react";
-import {ChatCard} from "@/widgets/profile/tabs/chat-card";
 import {Button} from "@/components/ui/button";
+import {ResumeService} from "@/service/ResumeService";
 
 export const ResumeTabContent = ({updatedAt}: { updatedAt?: string }) => {
     const [page, setPage] = useState(0);
@@ -12,7 +11,7 @@ export const ResumeTabContent = ({updatedAt}: { updatedAt?: string }) => {
     const {data, isLoading, isError, isPlaceholderData} = useQuery({
         queryKey: ["resumes", page, pageSize], // добавили pageSize
         queryFn: () =>
-            ChatService.findByCurrent({
+            ResumeService.findByCurrent({
                 page,
                 size: pageSize,
                 sort: "updatedAt",
@@ -40,9 +39,10 @@ export const ResumeTabContent = ({updatedAt}: { updatedAt?: string }) => {
                 {data?.content.map((resume) => (
                     <div key={resume.id} className="min-h-[280px]">
                         <ResumeCard
-                            title={resume?.name}
-                            category="Frontend Developer"
+                            title={resume?.resumeSettings?.name}
+                            category="Resume"
                             updatedAt={resume?.updatedAt}
+                            id={resume.id}
                         />
                     </div>
                 ))}

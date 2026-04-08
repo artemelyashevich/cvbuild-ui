@@ -34,9 +34,6 @@ export function LayoutHeader({ user }: Readonly<HeaderProps>) {
                 <DropdownMenuItem asChild>
                     <Link href="/profile"><User className="mr-2 h-4 w-4" /> Профиль</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                    <Link href="/profile/settings"><Settings className="mr-2 h-4 w-4" /> Настройки</Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" /> Выйти
                 </DropdownMenuItem>

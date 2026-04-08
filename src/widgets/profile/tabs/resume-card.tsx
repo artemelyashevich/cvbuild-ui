@@ -11,9 +11,10 @@ interface ResumeCardProps {
     title: string;
     updatedAt?: string;
     category: string;
+    id: string;
 }
 
-export const ResumeCard = ({ title, updatedAt, category }: ResumeCardProps) => (
+export const ResumeCard = ({ title, updatedAt, category, id }: ResumeCardProps) => (
     <Card className="
         relative overflow-hidden
         border border-zinc-100
@@ -49,9 +50,10 @@ export const ResumeCard = ({ title, updatedAt, category }: ResumeCardProps) => (
                 </p>
             </div>
 
-            <Button
-                variant="outline"
-                className="
+            <Link href={"/builder/" + id}>
+                <Button
+                    variant="outline"
+                    className="
                     w-full
                     rounded-2xl
                     border-zinc-200
@@ -64,9 +66,11 @@ export const ResumeCard = ({ title, updatedAt, category }: ResumeCardProps) => (
                     hover:bg-[#D6FF00]
                     hover:text-black
                 "
-            >
-                Редактировать
-            </Button>
+                >
+                    Редактировать
+                </Button>
+            </Link>
+
 
         </CardContent>
     </Card>

@@ -10,11 +10,12 @@ import {ISettings} from "@/entities";
 import SetPasswordForm from "@/widgets/settings/set-password-form";
 
 export function SecurityForm({settings}: {settings: ISettings}) {
+    console.log(settings);
     return (
         <div className="space-y-6">
-            <VerifyEmailFlow sendOtp={VerificationService.verifyRequest} verifyOtp={VerificationService.checkOtp}/>
+            <VerifyEmailFlow sendOtp={VerificationService.verifyRequest} verifyOtp={VerificationService.checkOtp} verified={settings.emailIsVerified}/>
             {settings.passwordSet ? <PasswordResetForm /> : <SetPasswordForm />}
-            <SecondPhaseForm />
+            <SecondPhaseForm enable={settings.secondAuthPhaseEnabled}/>
             <DeleteAccountForm/>
         </div>
     );

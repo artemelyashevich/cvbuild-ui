@@ -2,7 +2,7 @@ import {IChat, PageRequestParams, PageResponse} from "@/entities";
 import {axiosWithToken} from "@/features";
 
 export class ResumeService {
-    private static readonly BASE_URL = '/resumes/';
+    private static readonly BASE_URL = '/resumes';
 
     public static async findByCurrent(params: PageRequestParams, masked: boolean): Promise<PageResponse<IChat>> {
         const {data} = await axiosWithToken.get<PageResponse<IChat>>(this.BASE_URL, {
@@ -14,6 +14,6 @@ export class ResumeService {
                 masked: masked
             },
         });
-        return data;
+        return await data;
     }
 }

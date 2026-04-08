@@ -161,14 +161,36 @@ export default function AiWelcomePage() {
                     ))}
                 </div>
 
-                <form onSubmit={handleAgreeSubmit} className="text-center">
-                    <Button type={"submit"} disabled={agreeLoading}>
+                <form onSubmit={handleAgreeSubmit} className="text-center space-y-3">
+                    <Button
+                        type="submit"
+                        disabled={agreeLoading}
+                        className={cn(
+                            "h-12 px-6 rounded-2xl font-semibold transition-all duration-300 flex items-center gap-2 mx-auto",
+                            data?.agree
+                                ? "bg-green-500 hover:bg-green-600 text-white"
+                                : "bg-white border border-zinc-200 text-zinc-600 hover:border-black hover:text-black"
+                        )}
+                    >
                         {agreeLoading ? (
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin"/>
+                            <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (
-                            <span> {data.data?.agree ? 'Запретить' : 'Разрешить'} обработку персональных данных</span>
+                            <>
+                <span className={cn(
+                    "w-2.5 h-2.5 rounded-full",
+                    data?.agree ? "bg-white" : "bg-zinc-400"
+                )} />
+
+                                {data?.agree
+                                    ? "Согласие на обработку данных включено"
+                                    : "Дать согласие на обработку данных"}
+                            </>
                         )}
                     </Button>
+
+                    <p className="text-xs text-zinc-400 max-w-md mx-auto leading-relaxed">
+                        Нажимая кнопку, вы соглашаетесь на обработку персональных данных для создания и улучшения резюме с помощью AI.
+                    </p>
                 </form>
 
                 <div

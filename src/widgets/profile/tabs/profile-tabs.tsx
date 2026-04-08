@@ -1,15 +1,18 @@
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {IUserStats} from "@/entities";
+import {IProfile, ISettings, IUserStats} from "@/entities";
 import {ResumeTabContent} from "./resume-tab-content";
 import {UsageTabContent} from "./usage-tab-content";
 import {SecurityTabContent} from "@/widgets/profile/tabs/security-tab-content";
 import {ChatHistoryTab} from "@/widgets/profile/tabs/chat-tab-content";
+import SettingContent from "@/widgets/settings/settings-content";
 
 interface Props {
     stats: IUserStats | undefined;
+    user: IProfile | undefined;
+    settings: ISettings | undefined;
 }
 
-export function ProfileTabs({stats}: Readonly<Props>) {
+export function ProfileTabs({stats, user, settings}: Readonly<Props>) {
     return (
         <div className="md:col-span-2">
             <Tabs defaultValue="resumes" className="w-full space-y-8">
@@ -35,10 +38,10 @@ export function ProfileTabs({stats}: Readonly<Props>) {
                     </TabsTrigger>
 
                     <TabsTrigger
-                        value="activity"
+                        value="settings"
                         className="rounded-[1.5rem] font-bold uppercase tracking-widest text-xs data-[state=active]:bg-white data-[state=active]:shadow-md"
                     >
-                        Безопасность
+                        Настройки
                     </TabsTrigger>
                     <TabsTrigger
                         value="chats"
@@ -56,8 +59,8 @@ export function ProfileTabs({stats}: Readonly<Props>) {
                     <UsageTabContent usage={stats?.currentMonthUsage}/>
                 </TabsContent>
 
-                <TabsContent value="activity">
-                    <SecurityTabContent createdAt={stats?.createdAt}/>
+                <TabsContent value="settings">
+                    <SettingContent user={user} settings={settings} stats = {stats} />
                 </TabsContent>
 
                 <TabsContent value={"chats"}>

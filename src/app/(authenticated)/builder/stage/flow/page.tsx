@@ -35,7 +35,7 @@ export default function ResumeFlowPage() {
 
     useEffect(() => {
         if (response) {
-            push(`/builder/${response.id}`);
+            push(`/builder/${response.data.id}`);
         }
     }, [response, push]);
 

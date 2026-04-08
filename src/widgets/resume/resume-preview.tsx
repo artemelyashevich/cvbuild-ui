@@ -3,37 +3,45 @@
 import { useConstructorStore } from "@/features";
 
 export default function ResumePreview() {
-    const { data } = useConstructorStore();
+    const { data, sectionOrder } = useConstructorStore();
 
     const blocks = data?.blocks || {};
 
     if (!blocks || Object.keys(blocks).length === 0) {
         return (
-            <div className="flex items-center justify-center h-full text-gray-500">
-                Нет данных для отображения резюме
+            <div className="flex items-center justify-center h-[500px] text-zinc-400 text-sm">
+                Здесь появится ваше резюме
             </div>
         );
     }
 
+    const formatLabel = (key: string) => {
+        return key
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (l) => l.toUpperCase());
+    };
+
     const renderContent = (content: any) => {
         if (typeof content === "string" || typeof content === "number") {
-            return <p>{content}</p>;
+            return <p className="text-sm text-zinc-700">{content}</p>;
         }
 
         if (Array.isArray(content)) {
             return content.map((item, i) => (
-                <div key={i} className="mb-3">
+                <div key={i} className="space-y-1">
                     {typeof item === "object" ? (
                         Object.entries(item).map(([key, value]) => (
-                            <p key={key}>
-                                <span className="font-semibold">
-                                    {key}:
-                                </span>{" "}
-                                {String(value)}
-                            </p>
+                            <div key={key} className="flex gap-2 text-sm">
+                                <span className="text-zinc-400 min-w-[90px]">
+                                    {formatLabel(key)}
+                                </span>
+                                <span className="text-zinc-800 font-medium">
+                                    {String(value)}
+                                </span>
+                            </div>
                         ))
                     ) : (
-                        <p>{item}</p>
+                        <p className="text-sm text-zinc-700">{item}</p>
                     )}
                 </div>
             ));
@@ -41,10 +49,14 @@ export default function ResumePreview() {
 
         if (typeof content === "object" && content !== null) {
             return Object.entries(content).map(([key, value]) => (
-                <p key={key}>
-                    <span className="font-semibold">{key}:</span>{" "}
-                    {String(value)}
-                </p>
+                <div key={key} className="flex gap-2 text-sm">
+                    <span className="text-zinc-400 min-w-[90px]">
+                        {formatLabel(key)}
+                    </span>
+                    <span className="text-zinc-800 font-medium">
+                        {String(value)}
+                    </span>
+                </div>
             ));
         }
 
@@ -52,29 +64,42 @@ export default function ResumePreview() {
     };
 
     return (
-        <div className="h-[90vh] overflow-auto p-4">
-            <div className="bg-white shadow-xl rounded-xl p-8 max-w-4xl mx-auto">
+        <div className="h-[90vh] overflow-auto px-4 py-6 bg-zinc-100 rounded-[2rem]">
 
-                {/* TITLE */}
+            {/* Paper */}
+            <div className="bg-white shadow-2xl rounded-[1.5rem] p-10 max-w-[800px] mx-auto space-y-8">
+
+                {/* Header */}
                 {data.title && (
-                    <h1 className="text-3xl font-bold mb-6 text-center">
-                        {data.title}
-                    </h1>
+                    <div className="text-center border-b pb-6">
+                        <h1 className="text-3xl font-black tracking-tight">
+                            {data.title}
+                        </h1>
+                    </div>
                 )}
 
-                {/* SECTIONS */}
-                <div className="space-y-6">
-                    {Object.entries(blocks).map(([sectionName, content]) => (
-                        <div key={sectionName}>
-                            <h2 className="text-xl font-semibold mb-2">
-                                {sectionName}
-                            </h2>
+                {/* Sections */}
+                <div className="space-y-8">
+                    {(sectionOrder || Object.keys(blocks)).map((sectionName) => {
+                        const content = blocks[sectionName];
+                        if (!content) return null;
 
-                            <div className="space-y-2">
-                                {renderContent(content)}
+                        return (
+                            <div key={sectionName} className="space-y-3">
+
+                                {/* Section title */}
+                                <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-500 border-b pb-1">
+                                    {formatLabel(sectionName)}
+                                </h2>
+
+                                {/* Content */}
+                                <div className="space-y-3">
+                                    {renderContent(content)}
+                                </div>
+
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
             </div>

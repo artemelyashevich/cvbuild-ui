@@ -86,7 +86,7 @@ export function ProfileForm({user}: Readonly<{ user: IProfile }>) {
                     </div>
                 </CardContent>
 
-                <CardFooter className="border-t px-6 py-4">
+                <CardFooter className="border-t px-6 py-4 my-2">
                     <Button type="submit" disabled={isPending}>
                         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                         {isPending ? "Сохранение..." : "Сохранить всё"}

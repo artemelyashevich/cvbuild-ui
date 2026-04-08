@@ -46,53 +46,49 @@ export default function CategoryStep({ stepIndex, total, next, back, categoryNam
     const handleSave = () => {
         questions.forEach((q) => {
             const val = form[q.field] || '';
+
             switch (q.field) {
-                // Personal Information
                 case 'FIRST_NAME': resume.setFirstName(val); break;
                 case 'LAST_NAME': resume.setLastName(val); break;
                 case 'EMAIL': resume.setEmail(val); break;
                 case 'PHONE': resume.setPhone(val); break;
 
-                // Links
                 case 'LINKEDIN': resume.setLinkedin(val); break;
                 case 'GITHUB': resume.setGithub(val); break;
-                case 'PORTFOLIO': resume.setPortfolio(val); break;
 
-                // Job
-                case 'COMPANY':
-                case 'POSITION':
-                case 'JOB_PERIOD':
-                case 'RESPONSIBILITIES':
-                case 'ACHIEVEMENTS':
-                    resume.addWorkExperience({
-                        id: uuid(),
-                        jobTitle: form['POSITION'] || '',
-                        companyName: form['COMPANY'] || '',
-                        startDate: form['JOB_PERIOD']?.split('-')[0] || '',
-                        endDate: form['JOB_PERIOD']?.split('-')[1] || '',
-                    });
+                case 'SKILL':
+                    resume.setSkills(val.split(',').map((s) => s.trim()));
                     break;
 
-                // Education
-                case 'UNIVERSITY':
-                case 'DEGREE':
-                case 'FIELD_OF_STUDY':
-                case 'EDUCATION_PERIOD':
-                    resume.addEducation({
-                        id: uuid(),
-                        schoolName: form['UNIVERSITY'] || '',
-                        degree: form['DEGREE'] || '',
-                        startDate: form['EDUCATION_PERIOD']?.split('-')[0] || '',
-                        endDate: form['EDUCATION_PERIOD']?.split('-')[1] || '',
-                    });
-                    break;
-
-                // Skills / Highlights / Career
-                case 'SKILL': resume.setSkills(val.split(',').map((s) => s.trim())); break;
                 case 'HIGHLIGHT': resume.setHighlights(val); break;
                 case 'CAREER_GOAL': resume.setCareerGoals(val); break;
             }
         });
+
+        if (form['POSITION'] || form['COMPANY'] || form['JOB_PERIOD']) {
+            const [start, end] = (form['JOB_PERIOD'] || '').split('-');
+
+            resume.addWorkExperience({
+                id: uuid(),
+                jobTitle: form['POSITION'] || '',
+                companyName: form['COMPANY'] || '',
+                startDate: start || '',
+                endDate: end || '',
+            });
+        }
+
+        if (form['UNIVERSITY'] || form['DEGREE'] || form['EDUCATION_PERIOD']) {
+            const [start, end] = (form['EDUCATION_PERIOD'] || '').split('-');
+
+            resume.addEducation({
+                id: uuid(),
+                schoolName: form['UNIVERSITY'] || '',
+                degree: form['DEGREE'] || '',
+                startDate: start || '',
+                endDate: end || '',
+            });
+        }
+
         next();
     };
 

@@ -2,13 +2,16 @@
 
 import {useAuth, useStats} from "@/features";
 import {LeftAside, ProfileTabs} from "@/widgets";
+import useSettings from "@/features/hooks/use-settings";
+import ProfilePageSkeleton from "@/widgets/skeleton/profile-skeleton";
 
 export default function ProfilePage() {
     const {user, loading: authLoading} = useAuth();
+    const {data: settings, loading: settingsLoading} = useSettings();
 
     const {stats, loading: statsLoading} = useStats(user?.id)
 
-    if (authLoading || statsLoading) return <div className="p-10 text-center">Загрузка данных...</div>;
+    if (authLoading || statsLoading || settingsLoading) return <ProfilePageSkeleton />;
 
     if (!user) return <div className="p-10 text-center">Войдите в систему</div>;
 
@@ -19,7 +22,7 @@ export default function ProfilePage() {
                 <LeftAside stats={stats} />
 
                 {/* RIGHT COLUMN */}
-                <ProfileTabs stats={stats} />
+                <ProfileTabs stats={stats} user={user} settings={settings} />
             </div>
         </div>
     );

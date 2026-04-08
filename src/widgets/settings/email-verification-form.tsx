@@ -12,9 +12,10 @@ import {AxiosError} from "axios";
 interface VerifyEmailProps {
     sendOtp: (email: string) => Promise<void>;
     verifyOtp: (email: string, otp: string) => Promise<void>;
+    verified: boolean;
 }
 
-export default function VerifyEmailFlow({sendOtp, verifyOtp}: Readonly<VerifyEmailProps>) {
+export default function VerifyEmailFlow({sendOtp, verifyOtp, verified}: Readonly<VerifyEmailProps>) {
     const [step, setStep] = useState<'email' | 'otp' | 'result'>('email');
     const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
     const [loading, setLoading] = useState(false);
@@ -88,11 +89,11 @@ export default function VerifyEmailFlow({sendOtp, verifyOtp}: Readonly<VerifyEma
                         <Mail className="w-12 h-12 text-[#D6FF00] mb-4"/>
                         <h2 className="text-3xl font-black tracking-tight text-center">Введите Email</h2>
                         <form className="w-full space-y-6" onSubmit={handleEmailSubmit}>
-                            {user?.emailVerified ?
+                            {verified ?
                                 <div
-                                    className="w-full h-14 rounded-[2rem] bg-[#D6FF00] text-black font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center gap-2"
+                                    className="bg-green-500 text-white cursor-not-allowed hover:bg-green-500 w-full h-14 rounded-[2rem] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                                 >
-                                    Email already verified
+                                    Вы уже верифицировали почту
                                 </div>
                                 : <Button
                                     type="submit"

@@ -6,7 +6,8 @@ export class SettingsService {
     private static readonly API_URL = '/settings';
 
     public static async findSettings(): Promise<ISettings> {
-        return axiosWithToken.get(this.API_URL)
+        const settings = await axiosWithToken.get(this.API_URL)
+        return await settings.data
     }
 
     public static async agree(): Promise<void> {

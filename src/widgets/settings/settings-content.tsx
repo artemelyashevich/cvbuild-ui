@@ -3,15 +3,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileForm } from "./profile-form";
 import { SecurityForm } from "./security-form";
-import { NotificationsTab } from "./notifications-form";
-import {IProfile, ISettings} from "@/entities";
+import {IProfile, ISettings, IUserStats} from "@/entities";
 
 interface Props {
     user: IProfile | undefined;
     settings: ISettings | undefined;
+    stats: IUserStats | undefined;
 }
 
-export default function SettingContent({ user, settings }: Readonly<Props>) {
+export default function SettingContent({ user, settings, stats }: Readonly<Props>) {
+    console.log(settings)
     return (
         <div className="w-full mx-auto p-6 space-y-8">
             <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
@@ -35,12 +36,6 @@ export default function SettingContent({ user, settings }: Readonly<Props>) {
                     >
                         Безопасность
                     </TabsTrigger>
-                    <TabsTrigger
-                        value="notifications"
-                        className="data-[state=active]:bg-[#D6FF00] data-[state=active]:shadow-md text-gray-700 font-medium"
-                    >
-                        Уведомления
-                    </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="profile">
@@ -53,10 +48,6 @@ export default function SettingContent({ user, settings }: Readonly<Props>) {
 
                 <TabsContent value="security">
                     <SecurityForm settings = {settings} />
-                </TabsContent>
-
-                <TabsContent value="notifications">
-                    <NotificationsTab />
                 </TabsContent>
             </Tabs>
         </div>
