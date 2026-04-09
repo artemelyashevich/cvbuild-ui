@@ -8,6 +8,16 @@ import Cookies from "js-cookie";
 import {useParams, useRouter} from "next/navigation";
 import {axiosWithToken} from "@/features";
 import {useChatHistory} from "@/features/hooks/useChatHistory";
+import {toast} from "sonner";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle
+} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8888";
 
@@ -23,6 +33,7 @@ type ChatParams = {
 export default function Chat() {
     const {chatId} = useParams<ChatParams>();
     const router = useRouter();
+    const [openConfirm, setOpenConfirm] = useState(false);
     const {data, loading: historyLoading} = useChatHistory(chatId);
 
     const [message, setMessage] = useState<string>("");
@@ -67,12 +78,12 @@ export default function Chat() {
 
     const handleGenerateResume = async () => {
         try {
-            const response = await axiosWithToken.post(`/test/generate/${chatId}`);
-            if (response.data?.id) {
-                router.push(`/builder/stage/form/${response.data.id}`);
-            }
+            toast.success("Ваше резюме отправлено в обработку, мы отправим вам письмо на почту. Обычно это занимает 5 - 10 минут");
+            await axiosWithToken.get(`/ai-chat/resume/${chatId}`);
+
         } catch (error) {
             console.error("Failed to generate resume:", error);
+            toast.error("Ошибка при генерации резюме");
         }
     };
 
@@ -254,27 +265,58 @@ export default function Chat() {
                         </div>
                     ) : (
                         <button
-                            onClick={handleGenerateResume}
+                            onClick={() => setOpenConfirm(true)}
                             className="
-                  w-full
-                  h-14
-                  rounded-[2rem]
-                  bg-[#D6FF00]
-                  text-black
-                  font-black
-                  uppercase
-                  tracking-widest
-                  text-sm
-                  transition-all
-                  hover:brightness-105
-                  hover:shadow-lg
-              "
+                                  w-full
+                                  h-14
+                                  rounded-[2rem]
+                                  bg-[#D6FF00]
+                                  text-black
+                                  font-black
+                                  uppercase
+                                  tracking-widest
+                                  text-sm
+                                  transition-all
+                                  hover:brightness-105
+                                  hover:shadow-lg
+                              "
                         >
                             Сгенерировать резюме
                         </button>
                     )}
                 </footer>
             </div>
+            <Dialog open={openConfirm} onOpenChange={setOpenConfirm}>
+                <DialogContent className="sm:max-w-md rounded-2xl">
+                    <DialogHeader>
+                        <DialogTitle className="text-lg font-bold">
+                            Подтвердить действие
+                        </DialogTitle>
+                        <DialogDescription className="text-sm text-zinc-500">
+                            Вы уверены, что хотите сгенерировать резюме?
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <DialogFooter className="flex gap-2 justify-end">
+                        <Button
+                            variant="outline"
+                            onClick={() => setOpenConfirm(false)}
+                        >
+                            Отмена
+                        </Button>
+
+                        <Button
+                            className="bg-black text-white hover:bg-[#D6FF00] hover:text-black"
+                            onClick={async () => {
+                                setOpenConfirm(false);
+                                await handleGenerateResume();
+                            }}
+                        >
+                            Подтвердить
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

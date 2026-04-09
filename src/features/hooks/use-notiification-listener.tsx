@@ -12,7 +12,14 @@ export const NotificationListener = () => {
         const subscription = stompClient.subscribe('/user/queue/notifications', (message) => {
             const notification = JSON.parse(message.body);
             console.log("Received notification:", notification);
-            toast.warning(notification.message);
+            const type = String(notification.type).toLowerCase();
+            switch(type) {
+                case "success": toast.success(notification.message); break;
+                case "warning": toast.warning(notification.message); break;
+                case "error": toast.error(notification.message); break;
+                case "info": toast.info(notification.message); break;
+                default: toast.error(notification.message);
+            }
         });
 
         return () => {

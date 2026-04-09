@@ -6,6 +6,7 @@ import useResumeFlowQuestions from '@/features/hooks/use-resume-flow-questions';
 import { useSendResumeFlowForm } from '@/features';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import ResumeSkeleton from "@/widgets/skeleton/resume-skeleton";
 
 const CATEGORIES = [
     'personal_information',
@@ -40,7 +41,7 @@ export default function ResumeFlowPage() {
     }, [response, push]);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <ResumeSkeleton />;
     }
 
     if (!data) {
@@ -48,7 +49,7 @@ export default function ResumeFlowPage() {
     }
 
     if (isFinished || isPending) {
-        return <Loader2 className="animate-spin" />;
+        return  <ResumeSkeleton />;
     }
 
     const categoryName = CATEGORIES[step];

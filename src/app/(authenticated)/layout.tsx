@@ -16,6 +16,5 @@ export default function AuthenticatedLayout({children}: { children: React.ReactN
                 {children}
             </div>
         </StompProvider>
-
     )
 }
