@@ -6,7 +6,7 @@ import {SettingsService} from "@/service/SettingsService";
 
 export default function useAgree() {
     const {
-        data: chatContent,
+        data: agreement,
         isPending,
         mutate,
         mutateAsync,
@@ -18,7 +18,7 @@ export default function useAgree() {
 
     return {
         error,
-        chatContent,
+        agreement,
         loading: isPending,
         mutate,
         mutateAsync

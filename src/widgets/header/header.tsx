@@ -8,6 +8,7 @@ import { IProfile } from "@/entities";
 import { User, Settings, LogOut, ArrowRight } from "lucide-react";
 import { ImageService } from "@/service/ImageService";
 import { AuthService } from "@/service/AuthService";
+import {useQueryClient} from "@tanstack/react-query";
 
 interface HeaderProps {
     user?: IProfile;
@@ -17,9 +18,12 @@ export function LayoutHeader({ user }: Readonly<HeaderProps>) {
     const pathname = usePathname();
     const isLoggedIn = true//localStorage.getItem("id") == null;
     const {push} = useRouter();
+    const queryClient = useQueryClient();
+
     const handleLogout = async () => {
         await AuthService.logout();
         push("/auth");
+        queryClient.clear()
     };
 
     const renderUserMenu = () => (

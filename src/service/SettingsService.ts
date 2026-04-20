@@ -10,8 +10,9 @@ export class SettingsService {
         return await settings.data
     }
 
-    public static async agree(): Promise<void> {
-        await axiosWithToken.post(this.API_URL + "/agree")
+    public static async agree(): Promise<boolean> {
+        const response =await axiosWithToken.post(this.API_URL + "/agree")
+        return await response.data
     }
 
     public static async enable2fa(): Promise<void> {
