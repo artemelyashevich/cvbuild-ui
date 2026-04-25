@@ -73,7 +73,7 @@ export function ProfileForm({ user }: Readonly<{ user: IProfile }>) {
             <span className="relative px-3 text-black">Профиль</span>
           </span>
                 </h1>
-                <p className="text-zinc-500 font-medium tracking-tight">
+                <p className="text-zinc-500 font-medium tracking-tight ">
                     Настройте личные данные для автоматического заполнения резюме
                 </p>
             </div>

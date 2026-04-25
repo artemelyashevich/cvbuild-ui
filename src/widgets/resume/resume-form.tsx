@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import {useEffect} from "react";
 import {
     DndContext,
     closestCenter,
@@ -14,13 +14,14 @@ import {
 } from "@dnd-kit/sortable";
 
 import SortableSection from "@/widgets/resume/sortable-section";
-import { useConstructorStore } from "@/features/store/constructor-store";
+import {useConstructorStore} from "@/features/store/constructor-store";
 import TemplateSelector from "@/widgets/template/template-selector";
 import ResumePreview from "@/widgets/resume/resume-preview";
 import AddSection from "@/widgets/resume/add-section";
 import ExportPDF from "@/widgets/resume/export-pdf";
+import VacancyAdapter from "@/widgets/resume/vacancy-adapter";
 
-export default function ResumeForm({ initialData }: any) {
+export default function ResumeForm({initialData}: any) {
     const {
         data,
         setData,
@@ -33,7 +34,7 @@ export default function ResumeForm({ initialData }: any) {
     }, [initialData, setData]);
 
     const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
+        const {active, over} = event;
 
         if (!over || active.id === over.id) return;
 
@@ -60,10 +61,11 @@ export default function ResumeForm({ initialData }: any) {
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                        <TemplateSelector />
-                        <ExportPDF />
+                        <TemplateSelector/>
+                        <ExportPDF/>
                     </div>
                 </div>
+                <VacancyAdapter/>
 
                 <div className="grid grid-cols-1 lg:grid-cols-[420px_1fr] gap-10 items-start">
 
@@ -100,7 +102,7 @@ export default function ResumeForm({ initialData }: any) {
                                 )}
 
                                 <div className="pt-4">
-                                    <AddSection />
+                                    <AddSection/>
                                 </div>
 
                             </SortableContext>
@@ -108,8 +110,9 @@ export default function ResumeForm({ initialData }: any) {
                     </div>
 
                     <div className="sticky top-20 h-[calc(100vh-3rem)]">
-                        <div className="h-full rounded-[2rem] border border-zinc-200 bg-white shadow-2xl overflow-hidden">
-                            <ResumePreview />
+                        <div
+                            className="h-full rounded-[2rem] border border-zinc-200 bg-white shadow-2xl overflow-hidden">
+                            <ResumePreview/>
                         </div>
                     </div>
 
