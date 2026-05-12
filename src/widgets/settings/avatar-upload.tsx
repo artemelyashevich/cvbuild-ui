@@ -47,7 +47,7 @@ export function AvatarUpload({ initials, onFileSelect, avatarUrl }: Readonly<Pro
         <div className="flex flex-col items-center sm:flex-row gap-6">
             <div className="relative group">
                 <Avatar className="h-24 w-24 border-2 border-muted group-hover:opacity-80 transition-all">
-                    <AvatarImage src={ImageService.get(avatarUrl)} />
+                    <AvatarImage src={avatarUrl} />
                     <AvatarFallback className="text-xl bg-primary/10 text-primary">
                         {initials || <User size={40} />}
                     </AvatarFallback>

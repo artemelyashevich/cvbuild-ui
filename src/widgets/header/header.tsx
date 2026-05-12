@@ -30,7 +30,7 @@ export function LayoutHeader({ user }: Readonly<HeaderProps>) {
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <Avatar className="h-10 w-10 border-2 border-[#D6FF00] cursor-pointer">
-                    <AvatarImage src={ImageService.get(user?.avatarUrl)} />
+                    <AvatarImage src={user?.avatarUrl} />
                     <AvatarFallback>{`${user?.firstName?.[0] || ""}${user?.lastName?.[0] || ""}`}</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>

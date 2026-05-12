@@ -31,6 +31,8 @@ export function ProfileForm({ user }: Readonly<{ user: IProfile }>) {
     const router = useRouter();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+    console.log(user)
+
     const { mutateAsync: updateProfile, isPending: isUpdatingProfile } = useUpdateProfile();
     const { mutateAsync: uploadAvatar, isPending: isUploadingAvatar } = useUploadFile();
 
